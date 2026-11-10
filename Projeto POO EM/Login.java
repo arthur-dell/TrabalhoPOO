@@ -6,7 +6,7 @@ public class Login {
     String usuario = "admin";
     int senha = 1234;
 
-    public void realizarLogin() {
+    public boolean realizarLogin() {
 
         Scanner sc = new Scanner(System.in);
         int contador = 0;
@@ -23,7 +23,7 @@ public class Login {
             if (usuarioDigitado.equals(usuario) && senhaDigitada == senha) {
 
                 System.out.println("Acesso permitido!");
-                break;
+                return true;
 
             } else {
                 contador++;
@@ -33,5 +33,6 @@ public class Login {
         if (contador == 3) {
             System.out.println("Limite de tentativas atingido!");
         }
+        return false;
     }
 }
