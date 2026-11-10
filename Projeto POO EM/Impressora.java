@@ -34,11 +34,11 @@ public class Impressora {
                     break;
 
                 case 2:
-                    System.out.println("Abrir conexão");
+                    abrirConexao();
                     break;
 
                 case 3:
-                    System.out.println("Fechar conexão");
+                    fecharConexao();
                     break;
 
                 case 4:
@@ -90,5 +90,31 @@ public class Impressora {
         System.out.println("Digite o parâmetro: ");
         parametro = input.nextInt();
         System.out.println("Dados armazenados com sucesso!");
+    }
+
+    public void abrirConexao() {
+        if(conexaoAberta == false){
+            int resultado = ImpressoraDLL.INSTANCE.AbreConexaoImpressora(tipo, modelo, conexao, parametro);
+            if (resultado == 0) {
+                conexaoAberta = true;
+                System.out.println("Conexão aberta com sucesso!");
+            } else {
+                System.out.println("Erro ao abrir conexão. Código: " + resultado);
+            }
+        } else{
+            System.out.println("Conexão já esta aberta!");
+        }
+    }
+
+    public void fecharConexao(){
+        if(conexaoAberta == true){
+            int resultado = ImpressoraDLL.INSTANCE.FechaConexaoImpressora();
+            if(resultado == 0){
+                System.out.println("Conexão fechada com sucesso!");
+                conexaoAberta = false;
+            }else{
+                System.out.println("Erro ao fechar conexão. Código: " + resultado);
+            }
+        }
     }
 }
