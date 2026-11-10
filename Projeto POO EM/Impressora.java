@@ -8,6 +8,11 @@ public class Impressora {
     static String modelo;
     static String conexao;
     static int parametro;
+    String impressao;
+    int posicao;
+    int estilo;
+    int tamanho;
+    static boolean configurada = false;
     static Scanner input = new Scanner(System.in);
 
     public void Menu(){
@@ -42,7 +47,7 @@ public class Impressora {
                     break;
 
                 case 4:
-                    System.out.println("Imprimir texto");
+                    imprimirTexto();
                     break;
 
                 case 5:
@@ -90,19 +95,24 @@ public class Impressora {
         System.out.println("Digite o parâmetro: ");
         parametro = input.nextInt();
         System.out.println("Dados armazenados com sucesso!");
+        configurada = true;
     }
 
     public void abrirConexao() {
-        if(conexaoAberta == false){
-            int resultado = ImpressoraDLL.INSTANCE.AbreConexaoImpressora(tipo, modelo, conexao, parametro);
-            if (resultado == 0) {
-                conexaoAberta = true;
-                System.out.println("Conexão aberta com sucesso!");
-            } else {
-                System.out.println("Erro ao abrir conexão. Código: " + resultado);
+        if (configurada == true){
+            if(conexaoAberta == false){
+                int resultado = ImpressoraDLL.INSTANCE.AbreConexaoImpressora(tipo, modelo, conexao, parametro);
+                if (resultado == 0) {
+                    conexaoAberta = true;
+                    System.out.println("Conexão aberta com sucesso!");
+                } else {
+                    System.out.println("Erro ao abrir conexão. Código: " + resultado);
+                }
+            } else{
+                System.out.println("Conexão já esta aberta!");
             }
         } else{
-            System.out.println("Conexão já esta aberta!");
+            System.out.println("Impressora ainda não configurada!");
         }
     }
 
@@ -115,6 +125,30 @@ public class Impressora {
             }else{
                 System.out.println("Erro ao fechar conexão. Código: " + resultado);
             }
+        }else{
+            System.out.println("A conexão já está fechada!");
+        }
+    }
+    public void imprimirTexto(){
+
+        if(conexaoAberta == true){
+            input.nextLine();
+            System.out.println("Digite o texto que deseja imprimir: ");
+            impressao = input.nextLine();
+            System.out.println("Digite a posição que deseja imprimir: ");
+            posicao = input.nextInt();
+            System.out.println("Digite o estilo que deseja imprimir: ");
+            estilo = input.nextInt();
+            System.out.println("Digite o tamanho que deseja imprimir: ");
+            tamanho = input.nextInt();
+            int resultado = ImpressoraDLL.INSTANCE.ImpressaoTexto(impressao, posicao, estilo,tamanho);
+            if(resultado >= 0){
+                System.out.println("Impressão realizada com sucesso!");
+            }else{
+                System.out.println("Erro ao imprimir. Código: " + resultado);
+            }
+        }else{
+            System.out.println("Conexão com a impressora está fechada.");
         }
     }
 }
