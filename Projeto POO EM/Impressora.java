@@ -51,11 +51,11 @@ public class Impressora {
                     break;
 
                 case 5:
-                    System.out.println("Imprimir QR Code");
+                    imprimirQRCode();
                     break;
 
                 case 6:
-                    System.out.println("Imprimir código de barras");
+                    imprimirCodigoBarras();
                     break;
 
                 case 7:
@@ -148,6 +148,65 @@ public class Impressora {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
         }else{
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+    public void imprimirQRCode(){
+        int tamanho;
+        String conteudo;
+        int nivelCorrecao;
+
+        if (conexaoAberta == true){
+            input.nextLine();
+            System.out.println("Digite o conteudo: ");
+            conteudo = input.nextLine();
+            System.out.println("Digite o tamanho: ");
+            tamanho = input.nextInt();
+            System.out.println("Digite o nivel de correção: ");
+            nivelCorrecao = input.nextInt();
+            int impressao = ImpressoraDLL.INSTANCE.ImpressaoQRCode(conteudo,tamanho,nivelCorrecao);
+            if(impressao >= 0 ){
+                System.out.println("Impressão realizada com sucesso!");
+            }else{
+                System.out.println("Erro ao imprimir. Código: " + impressao);
+            }
+        }else{
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+
+    public void imprimirCodigoBarras(){
+        int tipo;
+        String dados;
+        int altura;
+        int largura;
+        int hri;
+        if(conexaoAberta == true){
+            input.nextLine();
+
+            System.out.println("Digite o tipo do código de barras: ");
+            tipo = input.nextInt();
+
+            input.nextLine();
+            System.out.println("Digite os dados do código de barras: ");
+            dados = input.nextLine();
+
+            System.out.println("Digite a altura (1 a 255): ");
+            altura = input.nextInt();
+
+            System.out.println("Digite a largura (1 a 6): ");
+            largura = input.nextInt();
+
+            System.out.println("Digite o HRI (1 a 4): ");
+            hri = input.nextInt();
+            int resultado = ImpressoraDLL.INSTANCE.ImpressaoCodigoBarras(tipo, dados, altura, largura, hri);
+
+            if (resultado >= 0) {
+                System.out.println("Código de barras impresso com sucesso!");
+            } else {
+                System.out.println("Erro ao imprimir. Código: " + resultado);
+            }
+        }else {
             System.out.println("Conexão com a impressora está fechada.");
         }
     }
