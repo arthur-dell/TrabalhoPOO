@@ -59,11 +59,11 @@ public class Impressora {
                     break;
 
                 case 7:
-                    System.out.println("Imprimir XML SAT");
+                    imprimirCodigoXMLSAT();
                     break;
 
                 case 8:
-                    System.out.println("Imprimir XML de cancelamento SAT");
+                    imprimirXMLCancelamentoSAT();
                     break;
 
                 case 9:
@@ -207,6 +207,41 @@ public class Impressora {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
         }else {
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+    public void imprimirCodigoXMLSAT(){
+        int param = 0;
+        if (conexaoAberta == true) {
+            input.nextLine();
+            System.out.println("Digite o caminho do arquivo XML: ");
+            String dados = "path=" + input.nextLine();
+            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLSAT(dados, param);
+
+            if (resultado >= 0) {
+                System.out.println("XML SAT impresso com sucesso!");
+            } else {
+                System.out.println("Erro ao imprimir. Código: " + resultado);
+            }
+        } else {
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+    public void imprimirXMLCancelamentoSAT(){
+        int param = 0;
+        if(conexaoAberta == true){
+            input.nextLine();
+            System.out.println("Digite o caminho do XML de cancelamento: ");
+            String dados = "path=" + input.nextLine();
+            System.out.println("Digite a assinatura do QR Code: ");
+            String assQRCode = input.nextLine();
+            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLCancelamentoSAT(dados, assQRCode, param);
+            if (resultado >= 0) {
+                System.out.println("XML de cancelamento impresso com sucesso!");
+            } else {
+                System.out.println("Erro ao imprimir. Código: " + resultado);
+            }
+        }else{
             System.out.println("Conexão com a impressora está fechada.");
         }
     }
