@@ -67,11 +67,11 @@ public class Impressora {
                     break;
 
                 case 9:
-                    System.out.println("Abrir gaveta");
+                    abrirGaveta();
                     break;
 
                 case 10:
-                    System.out.println("Emitir beep");
+                    emitirBeep();
                     break;
 
                 case 11:
@@ -240,6 +240,55 @@ public class Impressora {
                 System.out.println("XML de cancelamento impresso com sucesso!");
             } else {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
+            }
+        }else{
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+
+    public void abrirGaveta(){
+        int pino;
+        int tempoInicial;
+        int tempoFinal;
+        if(conexaoAberta == true){
+            System.out.println("Digite o pino (0 ou 1): ");
+            pino = input.nextInt();
+
+            System.out.println("Digite o tempo inicial (1 a 255): ");
+            tempoInicial = input.nextInt();
+
+            System.out.println("Digite o tempo final (1 a 255): ");
+            tempoFinal = input.nextInt();
+            int resultado = ImpressoraDLL.INSTANCE.AbreGaveta(pino, tempoInicial, tempoFinal);
+            if(resultado >= 0){
+                System.out.println("Gaveta aberta com sucesso!");
+            }else{
+                System.out.println("Erro ao abrir gaveta. Código: " + resultado);
+            }
+        }else{
+            System.out.println("Conexão com a impressora está fechada.");
+        }
+    }
+
+    public void emitirBeep(){
+        int quantidade;
+        int tempoInicio;
+        int tempoFim;
+        if(conexaoAberta == true){
+            System.out.println("Digite a quantidade de bips (1 a 63): ");
+            quantidade = input.nextInt();
+
+            System.out.println("Digite a duração do bip: ");
+            tempoInicio = input.nextInt();
+
+            System.out.println("Digite a pausa entre os bips (1 a 25): ");
+            tempoFim = input.nextInt();
+
+            int resultado = ImpressoraDLL.INSTANCE.SinalSonoro(quantidade,tempoInicio,tempoFim);
+            if(resultado >= 0){
+                System.out.println("Sinal sonoro emitido com sucesso!");
+            }else{
+                System.out.println("Erro ao emitir sinal sonoro. Código: " + resultado);
             }
         }else{
             System.out.println("Conexão com a impressora está fechada.");
