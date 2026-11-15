@@ -2,16 +2,17 @@ import java.util.Scanner;
 
 public class Impressora {
     int opcao;
-
+    String qrVenda = "kAmMUV2AFOP11vsbAwb4S1MrcnzIm8o6trefwjpRvpJaNGeXXcM2GKbs+aALc3WDxrimeOf9BdgoZl29RvtC1DmvqZ56oVEoRz0ymi"
+            + "a1tHUdGPzuO035OuiEseEj3+gU+8NzGzqWQIJgqdgLOZgnmUP2aBOkC0QcokhHPVfwm9tJFQnQkzGzu4692+LtpxhLwEhnFjoZh+1h"
+            + "pBXn5AEcbMS4Lx751qvFlfZX0hsYJf5pKcFH88E3byU82MU8UD5p9fyX2qL5Ae+Uql1VLPqoJOsQmC2BCBkMW7oQRCCR0osz6eLX1D"
+            + "HHJU+stxKCkITlQnz6XJd4LKXifGZuZ25+Uw==";
+    String qrCancelamento = "Q5DLkpdRijIRGY6YSSNsTWK1TztHL1vD0V1Jc4spo/CEUqICEb9SFy82ym8EhBRZjbh3btsZhF+sjHqEMR159i4agru9x6KsepK/q0E2e5xlU5cv3m1woYfgHyOkWDNcSdMsS6bBh2Bpq6s89yJ9Q6qh/J8YHi306ce9Tqb/drKvN2XdE5noRSS32TAWuaQEVd7u+TrvXlOQsE3fHR1D5f1saUwQLPSdIv01NF6Ny7jZwjCwv1uNDgGZONJdlTJ6p0ccqnZvuE70aHOI09elpjEO6Cd+orI7XHHrFCwhFhAcbalc+ZfO5b/+vkyAHS6CYVFCDtYR9Hi5qgdk31v23w==";
     static boolean conexaoAberta = false;
     static int tipo;
     static String modelo;
     static String conexao;
     static int parametro;
     String impressao;
-    int posicao;
-    int estilo;
-    int tamanho;
     static boolean configurada = false;
     static Scanner input = new Scanner(System.in);
 
@@ -31,8 +32,13 @@ public class Impressora {
             System.out.println("11 - Sair");
 
             System.out.println("Escolha uma opção: ");
+            try {
             opcao = input.nextInt();
-
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Digite apenas números!");
+                input.nextLine();
+                opcao = 0;
+            }
             switch (opcao) {
                 case 1:
                     configurarImpressora();
@@ -135,15 +141,10 @@ public class Impressora {
             input.nextLine();
             System.out.println("Digite o texto que deseja imprimir: ");
             impressao = input.nextLine();
-            System.out.println("Digite a posição que deseja imprimir: ");
-            posicao = input.nextInt();
-            System.out.println("Digite o estilo que deseja imprimir: ");
-            estilo = input.nextInt();
-            System.out.println("Digite o tamanho que deseja imprimir: ");
-            tamanho = input.nextInt();
-            int resultado = ImpressoraDLL.INSTANCE.ImpressaoTexto(impressao, posicao, estilo,tamanho);
+            int resultado = ImpressoraDLL.INSTANCE.ImpressaoTexto(impressao, 0, 0,0);
             if(resultado >= 0){
                 System.out.println("Impressão realizada com sucesso!");
+                ImpressoraDLL.INSTANCE.Corte(5);
             }else{
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
@@ -152,21 +153,12 @@ public class Impressora {
         }
     }
     public void imprimirQRCode(){
-        int tamanho;
-        String conteudo;
-        int nivelCorrecao;
-
         if (conexaoAberta == true){
-            input.nextLine();
-            System.out.println("Digite o conteudo: ");
-            conteudo = input.nextLine();
-            System.out.println("Digite o tamanho: ");
-            tamanho = input.nextInt();
-            System.out.println("Digite o nivel de correção: ");
-            nivelCorrecao = input.nextInt();
-            int impressao = ImpressoraDLL.INSTANCE.ImpressaoQRCode(conteudo,tamanho,nivelCorrecao);
-            if(impressao >= 0 ){
+
+            int impressao = ImpressoraDLL.INSTANCE.ImpressaoQRCode(qrVenda,5,3);
+            if(impressao == 0 ){
                 System.out.println("Impressão realizada com sucesso!");
+                ImpressoraDLL.INSTANCE.Corte(5);
             }else{
                 System.out.println("Erro ao imprimir. Código: " + impressao);
             }
@@ -176,33 +168,12 @@ public class Impressora {
     }
 
     public void imprimirCodigoBarras(){
-        int tipo;
-        String dados;
-        int altura;
-        int largura;
-        int hri;
         if(conexaoAberta == true){
-            input.nextLine();
+            int resultado = ImpressoraDLL.INSTANCE.ImpressaoCodigoBarras(8, "{A012345678912", 100, 3, 4);
 
-            System.out.println("Digite o tipo do código de barras: ");
-            tipo = input.nextInt();
-
-            input.nextLine();
-            System.out.println("Digite os dados do código de barras: ");
-            dados = input.nextLine();
-
-            System.out.println("Digite a altura (1 a 255): ");
-            altura = input.nextInt();
-
-            System.out.println("Digite a largura (1 a 6): ");
-            largura = input.nextInt();
-
-            System.out.println("Digite o HRI (1 a 4): ");
-            hri = input.nextInt();
-            int resultado = ImpressoraDLL.INSTANCE.ImpressaoCodigoBarras(tipo, dados, altura, largura, hri);
-
-            if (resultado >= 0) {
+            if (resultado == 0) {
                 System.out.println("Código de barras impresso com sucesso!");
+                ImpressoraDLL.INSTANCE.Corte(5);
             } else {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
@@ -211,15 +182,12 @@ public class Impressora {
         }
     }
     public void imprimirCodigoXMLSAT(){
-        int param = 0;
         if (conexaoAberta == true) {
-            input.nextLine();
-            System.out.println("Digite o caminho do arquivo XML: ");
-            String dados = "path=" + input.nextLine();
-            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLSAT(dados, param);
+            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLSAT("path=XMLSAT.xml", 0);
 
-            if (resultado >= 0) {
+            if (resultado == 0) {
                 System.out.println("XML SAT impresso com sucesso!");
+                ImpressoraDLL.INSTANCE.Corte(5);
             } else {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
@@ -228,16 +196,11 @@ public class Impressora {
         }
     }
     public void imprimirXMLCancelamentoSAT(){
-        int param = 0;
         if(conexaoAberta == true){
-            input.nextLine();
-            System.out.println("Digite o caminho do XML de cancelamento: ");
-            String dados = "path=" + input.nextLine();
-            System.out.println("Digite a assinatura do QR Code: ");
-            String assQRCode = input.nextLine();
-            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLCancelamentoSAT(dados, assQRCode, param);
-            if (resultado >= 0) {
+            int resultado = ImpressoraDLL.INSTANCE.ImprimeXMLCancelamentoSAT("path=CANC_SAT.xml", qrCancelamento, 0);
+            if (resultado == 0) {
                 System.out.println("XML de cancelamento impresso com sucesso!");
+                ImpressoraDLL.INSTANCE.Corte(5);
             } else {
                 System.out.println("Erro ao imprimir. Código: " + resultado);
             }
@@ -247,20 +210,9 @@ public class Impressora {
     }
 
     public void abrirGaveta(){
-        int pino;
-        int tempoInicial;
-        int tempoFinal;
         if(conexaoAberta == true){
-            System.out.println("Digite o pino (0 ou 1): ");
-            pino = input.nextInt();
-
-            System.out.println("Digite o tempo inicial (1 a 255): ");
-            tempoInicial = input.nextInt();
-
-            System.out.println("Digite o tempo final (1 a 255): ");
-            tempoFinal = input.nextInt();
-            int resultado = ImpressoraDLL.INSTANCE.AbreGaveta(pino, tempoInicial, tempoFinal);
-            if(resultado >= 0){
+            int resultado = ImpressoraDLL.INSTANCE.AbreGaveta(0, 100, 100);
+            if(resultado == 0){
                 System.out.println("Gaveta aberta com sucesso!");
             }else{
                 System.out.println("Erro ao abrir gaveta. Código: " + resultado);
@@ -271,21 +223,9 @@ public class Impressora {
     }
 
     public void emitirBeep(){
-        int quantidade;
-        int tempoInicio;
-        int tempoFim;
         if(conexaoAberta == true){
-            System.out.println("Digite a quantidade de bips (1 a 63): ");
-            quantidade = input.nextInt();
-
-            System.out.println("Digite a duração do bip: ");
-            tempoInicio = input.nextInt();
-
-            System.out.println("Digite a pausa entre os bips (1 a 25): ");
-            tempoFim = input.nextInt();
-
-            int resultado = ImpressoraDLL.INSTANCE.SinalSonoro(quantidade,tempoInicio,tempoFim);
-            if(resultado >= 0){
+            int resultado = ImpressoraDLL.INSTANCE.SinalSonoro(3, 5, 5);
+            if(resultado == 0){
                 System.out.println("Sinal sonoro emitido com sucesso!");
             }else{
                 System.out.println("Erro ao emitir sinal sonoro. Código: " + resultado);
