@@ -92,14 +92,27 @@ public class Impressora {
     }
 
     public void configurarImpressora() {
+        configurada = false;
         System.out.println("Digite o tipo: ");
+        try {
         tipo = input.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Digite um número válido!");
+            input.nextLine();
+            return;
+        }
         System.out.println("Digite o modelo: ");
         modelo = input.next();
         System.out.println("Digite a conexão: ");
         conexao = input.next();
         System.out.println("Digite o parâmetro: ");
+        try {
         parametro = input.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Digite um número válido!");
+            input.nextLine();
+            return;
+        }
         System.out.println("Dados armazenados com sucesso!");
         configurada = true;
     }

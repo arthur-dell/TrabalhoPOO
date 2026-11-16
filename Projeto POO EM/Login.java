@@ -10,16 +10,23 @@ public class Login {
 
         Scanner sc = new Scanner(System.in);
         int contador = 0;
-
+        int senhaDigitada;
         while (contador < 3) {
 
             System.out.println("Digite o usuario: ");
             String usuarioDigitado = sc.nextLine();
 
             System.out.println("Digite a senha: ");
-            int senhaDigitada = sc.nextInt();
+            try {
+            senhaDigitada = sc.nextInt();
             sc.nextLine();
-
+            } catch (java.util.InputMismatchException e) {
+                System.out.println("Digite apenas números na senha!");
+                sc.nextLine();
+                contador++;
+                System.out.println("Tentativas restantes: " + (3 - contador));
+                continue;
+            }
             if (usuarioDigitado.equals(usuario) && senhaDigitada == senha) {
 
                 System.out.println("Acesso permitido!");
